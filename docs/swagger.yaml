@@ -1,0 +1,264 @@
+basePath: /api/v1
+definitions:
+  auth_request.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  auth_request.RegisterRequest:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - name
+    - password
+    - username
+    type: object
+  product_request.CreateProductRequest:
+    properties:
+      category:
+        type: string
+      name:
+        type: string
+      price:
+        type: integer
+    required:
+    - category
+    - name
+    - price
+    type: object
+  product_request.UpdateProductRequest:
+    properties:
+      category:
+        type: string
+      name:
+        type: string
+      price:
+        type: integer
+    required:
+    - category
+    - name
+    - price
+    type: object
+  response.BaseResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+info:
+  contact:
+    email: wawatprigala00@gmail.com
+    name: Wawat Prigala
+    url: https://wawatprigala.netlify.app
+  description: This is a API E-Commerce.
+  termsOfService: http://swagger.io/terms/
+  title: E-Commerce API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - '*/*'
+      description: Login user.
+      parameters:
+      - description: login user
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/auth_request.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      summary: Login user.
+      tags:
+      - Authentication
+  /logout:
+    post:
+      consumes:
+      - '*/*'
+      description: Logout user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
+      summary: Logout user.
+      tags:
+      - Authentication
+  /products:
+    get:
+      consumes:
+      - '*/*'
+      description: get all of products.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
+      summary: Show all products.
+      tags:
+      - Product
+    post:
+      consumes:
+      - '*/*'
+      description: create new product.
+      parameters:
+      - description: create product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/product_request.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
+      summary: Create product.
+      tags:
+      - Product
+  /products/{productId}:
+    delete:
+      consumes:
+      - '*/*'
+      description: Remove product by ID.
+      parameters:
+      - description: Delete product by ID
+        in: path
+        name: productId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
+      summary: Remove product by ID.
+      tags:
+      - Product
+    get:
+      consumes:
+      - '*/*'
+      description: Find product by ID.
+      parameters:
+      - description: Get product by ID
+        in: path
+        name: productId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
+      summary: Get Product by ID.
+      tags:
+      - Product
+    put:
+      consumes:
+      - '*/*'
+      description: Update product by ID.
+      parameters:
+      - description: Update product by ID
+        in: path
+        name: productId
+        required: true
+        type: string
+      - description: update product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/product_request.UpdateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      security:
+      - BearerAuth: []
+      summary: Update product by ID.
+      tags:
+      - Product
+  /register:
+    post:
+      consumes:
+      - '*/*'
+      description: Register user.
+      parameters:
+      - description: register user
+        in: body
+        name: register
+        required: true
+        schema:
+          $ref: '#/definitions/auth_request.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      summary: Register user.
+      tags:
+      - Authentication
+  /users:
+    get:
+      consumes:
+      - '*/*'
+      description: get all of users.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BaseResponse'
+      summary: Show all users.
+      tags:
+      - User
+schemes:
+- http
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

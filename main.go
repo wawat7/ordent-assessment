@@ -2,14 +2,31 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"ordent-assessment/config"
 	"ordent-assessment/controller"
+	_ "ordent-assessment/docs"
 	"ordent-assessment/middleware"
 	"ordent-assessment/repository"
 	"ordent-assessment/route"
 	"ordent-assessment/service"
 )
 
+// @title E-Commerce API
+// @version 1.0
+// @description This is a API E-Commerce.
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name Wawat Prigala
+// @contact.url https://wawatprigala.netlify.app
+// @contact.email wawatprigala00@gmail.com
+
+// @BasePath /api/v1
+// @schemes http
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 
 	configuration := config.New()
@@ -35,6 +52,9 @@ func main() {
 			"message": "your app is healthy",
 		})
 	})
+
+	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.StaticFile("/doc.json", "./path/to/doc.json")
 	api := r.Group("api/v1")
 
 	route.ProductRoute(api, productController, middleware.AuthMiddleware(authService, userService, configuration, userTokenService))
