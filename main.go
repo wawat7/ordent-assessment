@@ -4,8 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"go.mongodb.org/mongo-driver/mongo"
 	"ordent-assessment/config"
 	"ordent-assessment/controller"
+	"ordent-assessment/database/seeder"
 	_ "ordent-assessment/docs"
 	"ordent-assessment/middleware"
 	"ordent-assessment/repository"
@@ -31,6 +33,8 @@ func main() {
 
 	configuration := config.New()
 	database := config.NewMongoDatabase(configuration)
+
+	runSeeder(database)
 
 	productRepository := repository.NewProductRepository(database)
 	productService := service.NewProductService(productRepository)
@@ -63,4 +67,8 @@ func main() {
 
 	r.Run(":4000") // listen and serve on 0.0.0.0:4000
 
+}
+
+func runSeeder(db *mongo.Database) {
+	seeder.UserSeeder(db)
 }

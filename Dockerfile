@@ -20,8 +20,7 @@ RUN echo "MONGO_POOL_MIN=${MONGO_POOL_MIN}"  >> ".env"
 RUN echo "MONGO_POOL_MAX=${MONGO_POOL_MAX}"  >> ".env"
 RUN echo "MONGO_MAX_IDLE_TIME_SECOND=${MONGO_MAX_IDLE_TIME_SECOND}"  >> ".env"
 
-
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app main.go
 
 # Final stage
 FROM alpine:3.14.2

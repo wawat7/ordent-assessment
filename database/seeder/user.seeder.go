@@ -37,9 +37,12 @@ func UserSeeder(db *mongo.Database) error {
 	}
 
 	for _, dataUser := range dataUsers {
-		_, err := repo.Create(ctx, dataUser)
-		if err != nil {
-			return err
+		existUser, _ := repo.FindByUsername(ctx, dataUser.Username)
+		if existUser.Username == "" {
+			_, err := repo.Create(ctx, dataUser)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
