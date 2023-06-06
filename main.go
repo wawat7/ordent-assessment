@@ -21,6 +21,7 @@ func main() {
 
 	userRepository := repository.NewUserRepository(database)
 	userService := service.NewUserService(userRepository)
+	userController := controller.NewUserController(userService)
 
 	userTokenRepository := repository.NewUserTokenRepository(database)
 	userTokenService := service.NewUserTokenService(userTokenRepository)
@@ -38,6 +39,7 @@ func main() {
 
 	route.ProductRoute(api, productController, middleware.AuthMiddleware(authService, userService, configuration, userTokenService))
 	route.AuthRoute(api, authController, middleware.AuthMiddleware(authService, userService, configuration, userTokenService))
+	route.UserRoute(api, userController)
 
 	r.Run(":4000") // listen and serve on 0.0.0.0:4000
 
