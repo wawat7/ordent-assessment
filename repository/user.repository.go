@@ -11,6 +11,7 @@ import (
 
 type UserRepository interface {
 	FindAll(ctx context.Context) ([]entity.User, error)
+	FindById(ctx context.Context, Id string) (entity.User, error)
 	FindByUsername(ctx context.Context, username string) (entity.User, error)
 	Create(ctx context.Context, user entity.User) (string, error)
 }
@@ -42,6 +43,16 @@ func (repo *userRepository) FindAll(ctx context.Context) ([]entity.User, error) 
 		users = append(users, user)
 	}
 	return users, nil
+}
+
+func (repo *userRepository) FindById(ctx context.Context, Id string) (entity.User, error) {
+	var user entity.User
+	objId, _ := primitive.ObjectIDFromHex(Id)
+	err := repo.collection.FindOne(ctx, bson.M{"_id": objId, "deleted_at": nil}).Decode(&user)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
 }
 
 func (repo *userRepository) FindByUsername(ctx context.Context, username string) (entity.User, error) {

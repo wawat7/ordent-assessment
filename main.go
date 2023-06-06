@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"ordent-assessment/config"
 	"ordent-assessment/controller"
+	"ordent-assessment/middleware"
 	"ordent-assessment/repository"
 	"ordent-assessment/route"
 	"ordent-assessment/service"
@@ -25,7 +26,7 @@ func main() {
 	userTokenService := service.NewUserTokenService(userTokenRepository)
 
 	authService := service.NewAuthService(userService, userTokenService)
-	authController := controller.NewAuthController(authService, configuration)
+	authController := controller.NewAuthController(authService, configuration, userTokenService)
 
 	r := gin.Default()
 	r.GET("/health", func(c *gin.Context) {
@@ -35,9 +36,9 @@ func main() {
 	})
 	api := r.Group("api/v1")
 
-	route.ProductRoute(api, productController)
-	route.AuthRoute(api, authController)
+	route.ProductRoute(api, productController, middleware.AuthMiddleware(authService, userService, configuration, userTokenService))
+	route.AuthRoute(api, authController, middleware.AuthMiddleware(authService, userService, configuration, userTokenService))
 
-	r.Run(":4000") // listen and serve on 0.0.0.0:8080
+	r.Run(":4000") // listen and serve on 0.0.0.0:4000
 
 }

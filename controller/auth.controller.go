@@ -4,9 +4,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"ordent-assessment/config"
+	"ordent-assessment/entity"
 	"ordent-assessment/request/auth_request"
 	"ordent-assessment/response"
 	"ordent-assessment/service"
+	"strings"
 )
 
 type AuthController interface {
@@ -16,12 +18,13 @@ type AuthController interface {
 }
 
 type authController struct {
-	configuration config.Config
-	authService   service.AuthService
+	configuration    config.Config
+	authService      service.AuthService
+	userTokenService service.UserTokenService
 }
 
-func NewAuthController(authService service.AuthService, configuration config.Config) *authController {
-	return &authController{authService: authService, configuration: configuration}
+func NewAuthController(authService service.AuthService, configuration config.Config, userTokenService service.UserTokenService) *authController {
+	return &authController{authService: authService, configuration: configuration, userTokenService: userTokenService}
 }
 
 func (controller *authController) Register(ctx *gin.Context) {
@@ -81,6 +84,31 @@ func (controller *authController) Login(ctx *gin.Context) {
 }
 
 func (controller *authController) Logout(ctx *gin.Context) {
-	//TODO implement me
-	panic("implement me")
+	currentUser := ctx.MustGet("currentUser").(entity.User)
+
+	token := getTokenFromHeader(ctx)
+	err := controller.userTokenService.Delete(ctx, currentUser.Id.Hex(), token)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.BaseResponse{
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	ctx.JSON(http.StatusOK, response.BaseResponse{
+		Message: "logout success",
+		Data:    nil,
+	})
+	return
+}
+
+func getTokenFromHeader(ctx *gin.Context) string {
+	authHeader := ctx.GetHeader("Authorization")
+	tokenString := ""
+	arrayToken := strings.Split(authHeader, " ")
+	if len(arrayToken) == 2 {
+		tokenString = arrayToken[1]
+	}
+
+	return tokenString
 }

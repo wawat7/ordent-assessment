@@ -10,6 +10,7 @@ import (
 
 type UserService interface {
 	GetAll(ctx context.Context) ([]entity.User, error)
+	GetById(ctx context.Context, Id string) (entity.User, error)
 	GetByUsername(ctx context.Context, username string) (entity.User, error)
 	Create(ctx context.Context, payload user_request.CreateUserRequest) (string, error)
 }
@@ -30,6 +31,13 @@ func (service *userService) GetAll(ctx context.Context) ([]entity.User, error) {
 	return users, nil
 }
 
+func (service *userService) GetById(ctx context.Context, Id string) (entity.User, error) {
+	user, err := service.repo.FindById(ctx, Id)
+	if err != nil {
+		return user, err
+	}
+	return user, nil
+}
 func (service *userService) GetByUsername(ctx context.Context, username string) (entity.User, error) {
 	user, err := service.repo.FindByUsername(ctx, username)
 	if err != nil {
@@ -55,5 +63,5 @@ func (service *userService) Create(ctx context.Context, payload user_request.Cre
 	if err != nil {
 		return userId, err
 	}
-	return "userId", nil
+	return userId, nil
 }
