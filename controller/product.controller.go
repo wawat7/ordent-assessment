@@ -24,6 +24,15 @@ func NewProductController(srv service.ProductService) *productController {
 	return &productController{service: srv}
 }
 
+// GetAll Product godoc
+// @Summary Show all products.
+// @Description get all of products.
+// @Tags Product
+// @Accept */*
+// @Produce application/json
+// @Success 200 {object} response.BaseResponse
+// @Router /products [get]
+// @Security BearerAuth
 func (controller *productController) GetAll(ctx *gin.Context) {
 	products, err := controller.service.GetAll(ctx)
 	if err != nil {
@@ -41,6 +50,16 @@ func (controller *productController) GetAll(ctx *gin.Context) {
 	return
 }
 
+// GetById Product godoc
+// @Summary Get Product by ID.
+// @Description Find product by ID.
+// @Tags Product
+// @Accept */*
+// @Param productId path string true "Get product by ID"
+// @Produce application/json
+// @Success 200 {object} response.BaseResponse
+// @Router /products/{productId} [get]
+// @Security BearerAuth
 func (controller *productController) GetById(ctx *gin.Context) {
 	var inputId product_request.GetProductById
 	err := ctx.ShouldBindUri(&inputId)
@@ -68,6 +87,16 @@ func (controller *productController) GetById(ctx *gin.Context) {
 	return
 }
 
+// Create Product godoc
+// @Summary Create product.
+// @Description create new product.
+// @Tags Product
+// @Accept */*
+// @Param product body product_request.CreateProductRequest true "create product"
+// @Produce application/json
+// @Success 200 {object} response.BaseResponse
+// @Router /products [post]
+// @Security BearerAuth
 func (controller *productController) Create(ctx *gin.Context) {
 	var input product_request.CreateProductRequest
 	err := ctx.ShouldBindJSON(&input)
@@ -94,6 +123,17 @@ func (controller *productController) Create(ctx *gin.Context) {
 	return
 }
 
+// Update Product godoc
+// @Summary Update product by ID.
+// @Description Update product by ID.
+// @Tags Product
+// @Accept */*
+// @Param productId path string true "Update product by ID"
+// @Param product body product_request.UpdateProductRequest true "update product"
+// @Produce application/json
+// @Success 200 {object} response.BaseResponse
+// @Router /products/{productId} [put]
+// @Security BearerAuth
 func (controller *productController) Update(ctx *gin.Context) {
 	var inputId product_request.GetProductById
 	err := ctx.ShouldBindUri(&inputId)
@@ -131,6 +171,16 @@ func (controller *productController) Update(ctx *gin.Context) {
 	return
 }
 
+// Delete Product godoc
+// @Summary Remove product by ID.
+// @Description Remove product by ID.
+// @Tags Product
+// @Accept */*
+// @Param productId path string true "Delete product by ID"
+// @Produce application/json
+// @Success 200 {object} response.BaseResponse
+// @Router /products/{productId} [delete]
+// @Security BearerAuth
 func (controller *productController) Delete(ctx *gin.Context) {
 	var inputId product_request.GetProductById
 	err := ctx.ShouldBindUri(&inputId)

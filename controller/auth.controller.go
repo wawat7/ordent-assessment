@@ -27,6 +27,15 @@ func NewAuthController(authService service.AuthService, configuration config.Con
 	return &authController{authService: authService, configuration: configuration, userTokenService: userTokenService}
 }
 
+// Register User Registration godoc
+// @Summary Register user.
+// @Description Register user.
+// @Tags Authentication
+// @Accept */*
+// @Param register body auth_request.RegisterRequest true "register user"
+// @Produce application/json
+// @Success 200 {object} response.BaseResponse
+// @Router /register [post]
 func (controller *authController) Register(ctx *gin.Context) {
 	var input auth_request.RegisterRequest
 	err := ctx.ShouldBindJSON(&input)
@@ -54,6 +63,15 @@ func (controller *authController) Register(ctx *gin.Context) {
 	return
 }
 
+// Login User Login godoc
+// @Summary Login user.
+// @Description Login user.
+// @Tags Authentication
+// @Accept */*
+// @Param login body auth_request.LoginRequest true "login user"
+// @Produce application/json
+// @Success 200 {object} response.BaseResponse
+// @Router /login [post]
 func (controller *authController) Login(ctx *gin.Context) {
 	var input auth_request.LoginRequest
 	err := ctx.ShouldBindJSON(&input)
@@ -83,6 +101,15 @@ func (controller *authController) Login(ctx *gin.Context) {
 	return
 }
 
+// Logout User Logout godoc
+// @Summary Logout user.
+// @Description Logout user.
+// @Tags Authentication
+// @Accept */*
+// @Produce application/json
+// @Success 200 {object} response.BaseResponse
+// @Router /logout [post]
+// @Security BearerAuth
 func (controller *authController) Logout(ctx *gin.Context) {
 	currentUser := ctx.MustGet("currentUser").(entity.User)
 
